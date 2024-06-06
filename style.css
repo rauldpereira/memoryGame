@@ -1,0 +1,45 @@
+.container {
+    text-align: center;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 5px;
+    width: 400px;
+    margin: 20px auto;
+}
+
+.card {
+    width: 90px;
+    height: 90px;
+    background-image: url('img/background.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    cursor: pointer;
+    color: transparent;
+    overflow: hidden;
+}
+
+.card.active {
+    background-color: #fff;
+    background-image: none;
+}
+
+.card img {
+    max-width: 100%;
+    max-height: 100%;
+    display: none;
+}
+
+.card.active img {
+    display: block;
+}
+
+#message {
+    font-size: 18px;
+}
