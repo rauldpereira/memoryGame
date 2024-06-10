@@ -9,9 +9,24 @@
 <body>
     <div class="container">
         <h1>Memory Game</h1>
-        <div id="game-board" class="game-board"></div>
-        <button id="restart-btn">Restart Game</button>
+        <div id="user-input">
+            <input type="text" id="username" placeholder="Digite seu nome">
+            <button id="start-btn">Iniciar Jogo</button>
+        </div>
+        <div id="game-board" class="game-board" style="display: none;"></div>
+        <button id="restart-btn" style="display: none;">Reiniciar</button>
+        <p id="attempts" style="display: none;">Tentativas: 0</p>
+        <p id="timer" style="display: none;">Tempo: 0s</p>
         <p id="message"></p>
+        <div id="end-game-buttons" style="display: none;">
+            <button id="home-btn">Início</button>
+            <button id="show-ranking-btn-end">Ranking</button>
+        </div>
+        <div id="ranking" style="display: none;">
+            <h2>Ranking</h2>
+            <ul id="ranking-list"></ul>
+            <button id="close-ranking-btn">Fechar</button>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>

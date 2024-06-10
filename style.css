@@ -2,6 +2,10 @@
     text-align: center;
 }
 
+.user-input {
+    margin-bottom: 20px;
+}
+
 .game-board {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -36,10 +40,44 @@
     display: none;
 }
 
-.card.active img {
+.card.active img, .card.matched img {
     display: block;
 }
 
-#message {
+.card.matched {
+    background-color: #00FF7F;
+    pointer-events: none;
+}
+
+#message, #attempts, #timer {
     font-size: 18px;
+}
+
+.ranking {
+    text-align: left;
+    width: 300px;
+    margin: 20px auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.ranking h2 {
+    margin: 0;
+}
+
+.ranking ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.ranking li {
+    margin: 5px 0;
+}
+#end-game-buttons {
+    margin-top: 20px;
+}
+
+#end-game-buttons button {
+    margin: 5px;
 }
