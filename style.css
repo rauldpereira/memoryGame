@@ -54,6 +54,7 @@
 }
 
 .ranking {
+    display: none;
     text-align: left;
     width: 300px;
     margin: 20px auto;
@@ -74,6 +75,7 @@
 .ranking li {
     margin: 5px 0;
 }
+
 #end-game-buttons {
     margin-top: 20px;
 }
