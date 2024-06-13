@@ -31,6 +31,9 @@ const closeRankingBtn = document.getElementById("close-ranking-btn");
 const endGameButtons = document.getElementById("end-game-buttons");
 const homeBtn = document.getElementById("home-btn");
 const showRankingBtnEnd = document.getElementById("show-ranking-btn-end");
+const modal = document.getElementById("modal");
+const rankingListModal = document.getElementById("ranking-list-modal");
+const closeModalBtn = document.getElementById("close-modal-btn");
 
 let flippedCards = [];
 let matchedCards = [];
@@ -84,7 +87,7 @@ function checkForMatch() {
   const secondIndex = secondCard.dataset.index;
 
   attempts++;
-  attemptsDisplay.innerText = `Tentativas: ${attempts}`;
+  attemptsDisplay.innerText = `Jogadas: ${attempts}`;
 
   if (cards[firstIndex] === cards[secondIndex]) {
     firstCard.classList.add("matched");
@@ -130,18 +133,23 @@ function saveRanking(username, attempts, time) {
 
 function displayRanking() {
   rankingList.innerHTML = "";
-  rankings.forEach((ranking, index) => {
+  rankingListModal.innerHTML = "";
+
+  for (let i = 0; i < rankings.length; i++) {
+    const ranking = rankings[i];
     const listItem = document.createElement("li");
-    listItem.innerText = `${index + 1}. ${ranking.username} - ${
-      ranking.attempts
-    } tentativas, ${ranking.time} segundos`;
+    listItem.innerText = `${i + 1}. ${ranking.username} - ${ranking.attempts} jogadas, ${ranking.time} segundos`;
     rankingList.appendChild(listItem);
-  });
+
+    const listItemModal = document.createElement("li");
+    listItemModal.innerText = `${i + 1}. ${ranking.username} - ${ranking.attempts} jogadas, ${ranking.time} segundos`;
+    rankingListModal.appendChild(listItemModal);
+  }
 }
 
 function endGame() {
   clearInterval(timer);
-  message.innerText = `Parabéns, ${usernameInput.value}! Todos os pares foram encontrados em ${attempts} tentativas e ${secondsElapsed} segundos!`;
+  message.innerText = `Parabéns, ${usernameInput.value}! Todos os pares foram encontrados em ${attempts} Jogadas e ${secondsElapsed} segundos!`;
   saveRanking(usernameInput.value, attempts, secondsElapsed);
   endGameButtons.style.display = "block";
   homeBtn.addEventListener("click", homeBtnClickHandler);
@@ -166,14 +174,14 @@ function homeBtnClickHandler() {
 
 function showRankingBtnEndClickHandler() {
   displayRanking();
-  rankingContainer.style.display = "block";
+  modal.style.display = "block";
 }
 
 startBtn.addEventListener("click", () => {
   const username = usernameInput.value.trim();
   if (username) {
-    if (rankingContainer.style.display === "block") {
-      rankingContainer.style.display = "none";
+    if (modal.style.display === "block") {
+      modal.style.display = "none";
     }
     userInputContainer.style.display = "none";
     gameBoard.style.display = "grid";
@@ -183,7 +191,7 @@ startBtn.addEventListener("click", () => {
     endGameButtons.style.display = "none";
     message.innerText = "";
     attempts = 0;
-    attemptsDisplay.innerText = "Tentativas: 0";
+    attemptsDisplay.innerText = "Jogadas: 0";
     secondsElapsed = 0;
     timerDisplay.innerText = "Tempo: 0s";
     shuffle(cards);
@@ -193,16 +201,6 @@ startBtn.addEventListener("click", () => {
     alert("Por favor, digite seu nome.");
   }
 });
-
-function generateUniqueUsername(username) {
-  let newUsername = username;
-  let count = 1;
-  while (rankings.some((player) => player.username === newUsername)) {
-    newUsername = `${username} (${count})`;
-    count++;
-  }
-  return newUsername;
-}
 
 restartBtn.addEventListener("click", () => {
   homeBtn.removeEventListener("click", homeBtnClickHandler);
@@ -217,22 +215,22 @@ restartBtn.addEventListener("click", () => {
   timer = null;
 
   message.innerText = "";
-  attemptsDisplay.innerText = "Tentativas: 0";
+  attemptsDisplay.innerText = "Jogadas: 0";
   timerDisplay.innerText = "Tempo: 0s";
   shuffle(cards);
   createCardElements();
   startTimer();
   endGameButtons.style.display = "none";
-  rankingContainer.style.display = "none";
+  modal.style.display = "none";
 });
 
 showRankingBtn.addEventListener("click", () => {
   displayRanking();
-  rankingContainer.style.display = "block";
+  modal.style.display = "block";
 });
 
-closeRankingBtn.addEventListener("click", () => {
-  rankingContainer.style.display = "none";
+closeModalBtn.addEventListener("click", () => {
+  modal.style.display = "none";
 });
 
 displayRanking();

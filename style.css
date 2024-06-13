@@ -1,16 +1,73 @@
+@font-face {
+    font-family: 'CustomFont';
+    src: url('fonts/Bright.woff2') format('woff2'),
+         url('fonts/Bright.woff') format('woff');
+}
+
+body {
+    margin: 0;
+    background-image: url('img/MemoryGame.png');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'CustomFont';
+    overflow: hidden;
+}
+
 .container {
     text-align: center;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    width: 100vh;
+    height: 95vh;
+}
+
+.titulo {
+    font-size: 150px;
+    color: #AB0F00;
+    text-shadow: 
+             -3px -3px #FFF, 
+             -3px 3px #FFF,                    
+              3px -3px #FFF,                  
+              3px 3px #FFF;
+    margin-top: 80px;
 }
 
 .user-input {
-    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 50px;
+}
+
+.user-input input {
+    width: 400px;
+    height: 40px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+button {
+    padding: 10px;
+    width: 220px;
+    height: 60px;
+    border-radius: 10px;
+    background-color: #B82025;
+    color: #fff;
+    margin-top: 15px;
 }
 
 .game-board {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 5px;
-    width: 400px;
+    width: 100%;
+    max-width: 400px;
     margin: 20px auto;
 }
 
@@ -82,4 +139,37 @@
 
 #end-game-buttons button {
     margin: 5px;
+}
+
+.modal {
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close-modal-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-modal-btn:hover,
+.close-modal-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
