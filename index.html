@@ -1,39 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory Game</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Game</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1 class="title" id="title">Memory<br>Game</h1>
-        <div id="user-input" class="user-input">
-            <input type="text" id="username" placeholder="Digite seu nome" class="username">
-            <button id="start-btn">Iniciar</button>
-            <button id="show-ranking-btn">Ranking</button>
-        </div>
-        <p id="attempts" style="display: none;">Jogadas: 0</p>
-        <p id="timer" style="display: none;">Tempo: 0s</p>
-        <p id="message"></p>
-        <div id="game-board" class="game-board" style="display: none;"></div>
-        <button id="btn-complete" style="display: none;">✔</button>
-        <div id="end-game-buttons" style="display: none;">
-            <button id="restart-btn" style="display: none;">Reiniciar</button>
-            <button id="home-btn">Início</button>
-            <button id="show-ranking-btn-end">Ranking</button>
-        </div>
+  <div class="container">
+    <h1 class="title" id="title">Memory<br>Game</h1>
+    <!-- Inicio do Game -->
+    <div id="user-input" class="user-input">
+      <input type="text" id="username" placeholder="Digite seu nome" class="username" maxlength="30">
+      <button id="start-btn">Iniciar</button>
+      <button id="show-ranking-btn">Ranking</button>
     </div>
 
-    <div id="modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <span id="close-modal-btn" class="close-modal-btn">&times;</span>
-            <h2>Ranking</h2>
-            <ul id="ranking-list-modal"></ul>
-        </div>
+    <!-- Contabilizador de Jogadas do Game -->
+    <p id="attempts" class="attempts" style="display: none;">Jogadas: 0</p>
+    <!-- Contabilizador de Tempo do Game -->
+    <p id="timer" class="timer" style="display: none;">Tempo: 0s</p>
+    <!-- Mensagem do fim do game -->
+    <p id="message" class="message"></p>
+
+    <div id="game-board" class="game-board" style="display: none;"></div>
+
+    <button id="btn-complete" class="btn-complete" style="display: none;">✔</button>
+    <!-- Botões do Fim do Game -->
+    <div id="end-game-buttons" class="end-game-buttons" style="display: none;">
+      <button id="restart-btn" style="display: none;">Reiniciar</button>
+      <button id="home-btn">Início</button>
+      <button id="show-ranking-btn-end">Ranking</button>
     </div>
-    
-    <script src="script.js"></script>
+  </div>
+
+  <!-- Modal para a apresentação do Ranking-->
+  <div id="modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div id="ranking-list-modal">
+        <table>
+        </table>
+      </div>
+      <button class="close-modal-btn">Fechar</button>
+    </div>
+  </div>
+  
+  <script src="script.js"></script>
 </body>
 </html>

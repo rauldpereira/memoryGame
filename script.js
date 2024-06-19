@@ -16,6 +16,7 @@ const cards = [
   "vaca.png",
   "vaca.png",
 ];
+
 const gameBoard = document.getElementById("game-board");
 const restartBtn = document.getElementById("restart-btn");
 const message = document.getElementById("message");
@@ -24,19 +25,17 @@ const timerDisplay = document.getElementById("timer");
 const startBtn = document.getElementById("start-btn");
 const usernameInput = document.getElementById("username");
 const userInputContainer = document.getElementById("user-input");
-const rankingContainer = document.getElementById("ranking");
-const rankingList = document.getElementById("ranking-list");
 const showRankingBtn = document.getElementById("show-ranking-btn");
-const closeRankingBtn = document.getElementById("close-ranking-btn");
 const endGameButtons = document.getElementById("end-game-buttons");
 const homeBtn = document.getElementById("home-btn");
 const showRankingBtnEnd = document.getElementById("show-ranking-btn-end");
 const modal = document.getElementById("modal");
 const rankingListModal = document.getElementById("ranking-list-modal");
-const closeModalBtn = document.getElementById("close-modal-btn");
+const closeModalBtn = document.querySelector(".close-modal-btn");
 const completeBtn = document.getElementById("btn-complete");
-const cardElements = document.querySelectorAll(".card");
-const title = document.querySelectorAll(".title");
+const title = document.getElementById("title");
+const rankings = JSON.parse(localStorage.getItem("rankings")) || [];
+
 
 let flippedCards = [];
 let matchedCards = [];
@@ -44,8 +43,8 @@ let attempts = 0;
 let timer;
 let secondsElapsed = 0;
 let isChecking = false;
-let rankings = JSON.parse(localStorage.getItem("rankings")) || [];
 
+// Função para embaralhar as cartas
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -53,6 +52,7 @@ function shuffle(array) {
   }
 }
 
+// Função para criar elementos de cartas no tabuleiro
 function createCardElements() {
   gameBoard.innerHTML = "";
   cards.forEach((card, index) => {
@@ -67,6 +67,7 @@ function createCardElements() {
   });
 }
 
+// Função para virar uma carta
 function flipCard(cardElement) {
   if (
     isChecking ||
@@ -84,6 +85,7 @@ function flipCard(cardElement) {
   }
 }
 
+// Função para verificar se as duas cartas viradas formam um par
 function checkForMatch() {
   const [firstCard, secondCard] = flippedCards;
   const firstIndex = firstCard.dataset.index;
@@ -110,6 +112,7 @@ function checkForMatch() {
   isChecking = false;
 }
 
+// Função para iniciar o cronômetro
 function startTimer() {
   secondsElapsed = 0;
   timerDisplay.innerText = `Tempo: 0s`;
@@ -119,6 +122,7 @@ function startTimer() {
   }, 1000);
 }
 
+// Função para salvar o ranking do jogador
 function saveRanking(username, attempts, time) {
   let newUsername = username;
   let count = 1;
@@ -129,29 +133,75 @@ function saveRanking(username, attempts, time) {
   }
 
   rankings.push({ username: newUsername, attempts, time });
-  rankings.sort((a, b) => a.attempts - b.attempts || a.time - b.time);
+  rankings.sort((a, b) => {
+    if (a.attempts !== b.attempts) {
+      return a.attempts - b.attempts; // Ordena pelo número de tentativas
+    } else if (a.time !== b.time) {
+      return a.time - b.time; // Se houver empate nas tentativas, ordena pelo tempo
+    } else {
+      return a.username.localeCompare(b.username); // Em caso de empate em ambas, ordena por ordem alfabética
+    }
+  });
   localStorage.setItem("rankings", JSON.stringify(rankings));
   displayRanking();
 }
 
+// Função para exibir o ranking na página
 function displayRanking() {
-  rankingListModal.innerHTML = "";
+  const tableBody = document.createElement("tbody");
 
-  for (let i = 0; i < rankings.length; i++) {
-    const ranking = rankings[i];
+  rankings.forEach((ranking, index) => {
+    const tableRow = document.createElement("tr");
 
-    const listItemModal = document.createElement("li");
-    listItemModal.innerText = `${i + 1}. ${ranking.username} - ${ranking.attempts} jogadas, ${ranking.time} segundos`;
-    rankingListModal.appendChild(listItemModal);
+    const rankCell = document.createElement("td");
+    rankCell.innerText = `${index + 1}.`;
+
+    const usernameCell = document.createElement("td");
+    usernameCell.innerText = ranking.username;
+
+    const attemptsCell = document.createElement("td");
+    attemptsCell.innerText = `${ranking.attempts} jogadas`;
+
+    const timeCell = document.createElement("td");
+    timeCell.innerText = `${ranking.time} segundos`;
+
+    tableRow.appendChild(rankCell);
+    tableRow.appendChild(usernameCell);
+    tableRow.appendChild(attemptsCell);
+    tableRow.appendChild(timeCell);
+
+    tableBody.appendChild(tableRow);
+  });
+
+  const tableElement = document.createElement("table");
+  tableElement.innerHTML = `
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Nome</th>
+        <th>Jogadas</th>
+        <th>Tempo</th>
+      </tr>
+    </thead>
+  `;
+  tableElement.appendChild(tableBody);
+
+  const existingTable = document.querySelector("#ranking-list-modal table");
+  if (existingTable) {
+    existingTable.remove();
   }
+
+  rankingListModal.appendChild(tableElement);
 }
 
+// Função para encerrar o jogo
 function endGame() {
   clearInterval(timer);
   gameBoard.style.display = "none";
   completeBtn.style.display = "none";
   attemptsDisplay.style.display = "none";
   timerDisplay.style.display = "none";
+  title.style.display = "block";
   message.innerText = `Parabéns, ${usernameInput.value}! Todos os pares foram encontrados em ${attempts} Jogadas e ${secondsElapsed} segundos!`;
   saveRanking(usernameInput.value, attempts, secondsElapsed);
   endGameButtons.style.display = "block";
@@ -165,8 +215,10 @@ function endGame() {
   secondsElapsed = 0;
 }
 
+// Função para lidar com o clique no botão "Início"
 function homeBtnClickHandler() {
-  userInputContainer.style.display = "block";
+  userInputContainer.style.display = "flex";
+  title.style.display = "block";
   gameBoard.style.display = "none";
   attemptsDisplay.style.display = "none";
   timerDisplay.style.display = "none";
@@ -174,18 +226,19 @@ function homeBtnClickHandler() {
   message.innerText = "";
 }
 
+// Função para exibir o ranking ao clicar no botão "Ranking" no final do jogo
 function showRankingBtnEndClickHandler() {
   displayRanking();
   modal.style.display = "block";
 }
 
+// Função para iniciar o jogo
 function startGame() {
   const username = usernameInput.value.trim();
   if (username) {
-    if (modal.style.display === "block") {
-      modal.style.display = "none";
-    }
+    modal.style.display = "none";
     userInputContainer.style.display = "none";
+    title.style.display = "none";
     gameBoard.style.display = "grid";
     restartBtn.style.display = "inline-block";
     attemptsDisplay.style.display = "block";
@@ -201,11 +254,13 @@ function startGame() {
     shuffle(cards);
     createCardElements();
     startTimer();
+    displayRanking();
   } else {
     alert("Por favor, digite seu nome.");
   }
 }
 
+// Função para reiniciar o jogo
 function restartGame() {
   homeBtn.removeEventListener("click", homeBtnClickHandler);
   showRankingBtnEnd.removeEventListener("click", showRankingBtnEndClickHandler);
@@ -226,39 +281,48 @@ function restartGame() {
   startTimer();
   endGameButtons.style.display = "none";
   modal.style.display = "none";
+  title.style.display = "none";
 
   gameBoard.style.display = "grid";
   attemptsDisplay.style.display = "block";
   timerDisplay.style.display = "block";
-  restartBtn.style.display = "block";
   completeBtn.style.display = "block";
 }
 
+// Função para completar o jogo automaticamente
 function completeGame() {
-  cardElements.forEach((cardElement, index) => {
+  const cardElements = document.querySelectorAll(".card");
+  clearInterval(timer);
+
+  cardElements.forEach((cardElement) => {
     cardElement.classList.add("matched");
+    cardElement.classList.remove("active");
+    cardElement.style.backgroundImage = "none";
+    cardElement.style.backgroundColor = "#fff";
   });
 
-  matchedCards = cards.map((_, index) => index);
-  attempts = 0;
-  attemptsDisplay.innerText = `Jogadas: ${attempts}`;
-  secondsElapsed++;
-  timerDisplay.innerText = `Tempo: ${secondsElapsed}s`;
+  setTimeout(() => {
+    matchedCards = cards.map((_, index) => index);
+    attemptsDisplay.innerText = `Jogadas: ${attempts}`;
+    timerDisplay.innerText = `Tempo: ${secondsElapsed}s`;
 
-  endGame();
+    endGame();
+  }, 2000);
 }
 
+// Adiciona event listeners aos botões
 startBtn.addEventListener("click", startGame);
-
 restartBtn.addEventListener("click", restartGame);
-
 showRankingBtn.addEventListener("click", () => {
   displayRanking();
   modal.style.display = "block";
 });
-
+completeBtn.addEventListener("click", completeGame);
+modal.addEventListener("click", (event) => {
+  if (event.target === modal) {
+    modal.style.display = "none";
+  }
+});
 closeModalBtn.addEventListener("click", () => {
   modal.style.display = "none";
 });
-
-completeBtn.addEventListener("click", completeGame);
